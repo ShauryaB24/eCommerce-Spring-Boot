@@ -1,15 +1,16 @@
 package com.shaurya.Ecommerce_sb.service;
 
+import com.shaurya.Ecommerce_sb.dto.request.CategoryRequest;
+import com.shaurya.Ecommerce_sb.dto.response.CategoryResponse;
 import com.shaurya.Ecommerce_sb.model.Category;
 
-import java.util.List;
 
 public interface CategoryService {
-    List<Category> getAllCategories();
+    CategoryResponse getAllCategories();
 
-    void createCategory(Category category);
+    CategoryRequest createCategory(CategoryRequest categoryRequest);
 
-    String deleteCategory(Long categoryId);
+    CategoryRequest deleteCategory(Long categoryId);
 
-    Category updateCategory(Category category, Long categoryId);
+    CategoryRequest updateCategory(CategoryRequest categoryRequest, Long categoryId);
 }
