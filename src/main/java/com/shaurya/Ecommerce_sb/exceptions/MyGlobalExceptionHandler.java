@@ -1,5 +1,6 @@
 package com.shaurya.Ecommerce_sb.exceptions;
 
+import com.shaurya.Ecommerce_sb.dto.response.APIResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,15 +29,17 @@ public class MyGlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> myResourceNotFoundException(ResourceNotFoundException e) {
         String message = e.getMessage();
+        APIResponse apiResponse = new APIResponse(message, false);
 
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(APIException.class)
     public ResponseEntity<?> myAPIException(ResourceNotFoundException e) {
         String message = e.getMessage();
+        APIResponse apiResponse = new APIResponse(message, false);
 
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
 
 }

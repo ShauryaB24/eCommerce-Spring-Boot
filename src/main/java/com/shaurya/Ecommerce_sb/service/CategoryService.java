@@ -2,11 +2,10 @@ package com.shaurya.Ecommerce_sb.service;
 
 import com.shaurya.Ecommerce_sb.dto.request.CategoryRequest;
 import com.shaurya.Ecommerce_sb.dto.response.CategoryResponse;
-import com.shaurya.Ecommerce_sb.model.Category;
 
 
 public interface CategoryService {
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 
     CategoryRequest createCategory(CategoryRequest categoryRequest);
 

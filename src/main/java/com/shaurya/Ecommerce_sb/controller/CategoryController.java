@@ -1,8 +1,8 @@
 package com.shaurya.Ecommerce_sb.controller;
 
+import com.shaurya.Ecommerce_sb.config.AppConstants;
 import com.shaurya.Ecommerce_sb.dto.request.CategoryRequest;
 import com.shaurya.Ecommerce_sb.dto.response.CategoryResponse;
-import com.shaurya.Ecommerce_sb.model.Category;
 import com.shaurya.Ecommerce_sb.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
-import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -23,8 +22,12 @@ public class CategoryController {
 
     @GetMapping("/public/categories")
     //@RequestMapping(value = "/api/public/categories", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllCategories() {
-        CategoryResponse categoryResponse = categoryService.getAllCategories();
+    public ResponseEntity<?> getAllCategories(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY, required = false) String sortBy,
+            @RequestParam(name = "sortOrder", defaultValue = AppConstants.SORT_ORDER, required = false) String sortOrder) {
+        CategoryResponse categoryResponse = categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder);
         return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
 
