@@ -2,8 +2,6 @@ package com.shaurya.Ecommerce_sb.controller;
 
 import com.shaurya.Ecommerce_sb.dto.request.ProductRequest;
 import com.shaurya.Ecommerce_sb.dto.response.ProductResponse;
-import com.shaurya.Ecommerce_sb.model.Product;
-import com.shaurya.Ecommerce_sb.repository.ProductRepository;
 import com.shaurya.Ecommerce_sb.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +15,10 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping("/admin/categories/{categoryId}/product")
-    public ResponseEntity<?> addProduct(@RequestBody Product product,
+    public ResponseEntity<?> addProduct(@RequestBody ProductRequest productRequest,
                                         @PathVariable Long categoryId) {
-        ProductRequest productRequest = productService.addProduct(categoryId, product);
-        return new ResponseEntity<>(productRequest, HttpStatus.CREATED);
+        ProductRequest savedProductRequest = productService.addProduct(categoryId, productRequest);
+        return new ResponseEntity<>(savedProductRequest, HttpStatus.CREATED);
     }
 
     @GetMapping("/public/products")
@@ -40,5 +38,19 @@ public class ProductController {
     public ResponseEntity<?> getProductsByKeyword(@PathVariable String keyword) {
         ProductResponse productResponse = productService.searchProductByKeyword(keyword);
         return new ResponseEntity<>(productResponse, HttpStatus.FOUND);
+    }
+
+    @PutMapping("/admin/products/{productId}")
+    public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest,
+                                           @PathVariable Long productId) {
+        ProductRequest updateProductRequest = productService.updateProduct(productId, productRequest);
+        return new ResponseEntity<>(updateProductRequest, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/products/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
+        ProductRequest deletedProduct = productService.deleteProduct(productId);
+        return new ResponseEntity<>(deletedProduct, HttpStatus.OK);
+
     }
 }
