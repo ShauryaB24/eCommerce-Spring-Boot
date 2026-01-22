@@ -2,6 +2,7 @@ package com.shaurya.Ecommerce_sb.service.impl;
 
 import com.shaurya.Ecommerce_sb.dto.request.ProductRequest;
 import com.shaurya.Ecommerce_sb.dto.response.ProductResponse;
+import com.shaurya.Ecommerce_sb.exceptions.APIException;
 import com.shaurya.Ecommerce_sb.exceptions.ResourceNotFoundException;
 import com.shaurya.Ecommerce_sb.model.Category;
 import com.shaurya.Ecommerce_sb.model.Product;
@@ -41,14 +42,28 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-        Product product = modelMapper.map(productRequest, Product.class);
-        product.setImage("default.png");
-        product.setCategory(category);
-        Double specialPrice = product.getPrice() -
-                ((product.getDiscount() * 0.01) * product.getPrice());
-        product.setSpecialPrice(specialPrice);
-        Product savedProduct = productRepository.save(product);
-        return modelMapper.map(savedProduct, ProductRequest.class);
+        boolean isProductNotPresent = true;
+        List<Product> products = category.getProducts();
+        for (Product value : products) {
+            if (value.getProductName().equals(productRequest.getProductName())) {
+                isProductNotPresent = false;
+                break;
+            }
+        }
+
+        if (isProductNotPresent) {
+            Product product = modelMapper.map(productRequest, Product.class);
+            product.setImage("default.png");
+            product.setCategory(category);
+            Double specialPrice = product.getPrice() -
+                    ((product.getDiscount() * 0.01) * product.getPrice());
+            product.setSpecialPrice(specialPrice);
+            Product savedProduct = productRepository.save(product);
+            return modelMapper.map(savedProduct, ProductRequest.class);
+        } else {
+            throw new APIException("Product already exist!!!");
+        }
+
     }
 
     @Override
@@ -57,6 +72,11 @@ public class ProductServiceImpl implements ProductService {
         List<ProductRequest> productRequests = products.stream()
                 .map(product -> modelMapper.map(product, ProductRequest.class))
                 .toList();
+
+        // Easy Logic
+        if (products.isEmpty())
+            throw new APIException("Product list is Empty!!!");
+
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productRequests);
         return productResponse;
@@ -72,6 +92,10 @@ public class ProductServiceImpl implements ProductService {
         List<ProductRequest> productRequests = products.stream()
                 .map(product -> modelMapper.map(product, ProductRequest.class))
                 .toList();
+
+        if (products.isEmpty())
+            throw new APIException("Product list is Empty!!!");
+
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productRequests);
         return productResponse;
@@ -84,6 +108,10 @@ public class ProductServiceImpl implements ProductService {
         List<ProductRequest> productRequests = products.stream()
                 .map(product -> modelMapper.map(product, ProductRequest.class))
                 .toList();
+
+        if (products.isEmpty())
+            throw new APIException("Product list is Empty!!!");
+
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productRequests);
         return productResponse;

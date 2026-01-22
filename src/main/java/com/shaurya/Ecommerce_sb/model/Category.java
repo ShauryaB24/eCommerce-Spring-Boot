@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 
 @Data
 @NoArgsConstructor
@@ -19,5 +21,8 @@ public class Category {
     @NotBlank
     @Size(min =5, message = "Category name must contain atleast 5 characters")
     private String categoryName;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products;
 
 }
